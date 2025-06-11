@@ -1,4 +1,3 @@
-// src/controllers/sessionController.ts
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Session from '../models/session';
 
@@ -26,7 +25,7 @@ class SessionController {
     }
   }
 
-  async deleteSession(id: string) {
+  async deleteSession(id: number) {
     try {
       return await this.client
         .from("session")
