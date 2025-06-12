@@ -14,6 +14,13 @@ class SessionController {
       .select("*");
   }
 
+  async getAllSessionsByUserId(userId: number) {
+    return await this.client
+      .from("user_to_session")
+      .select("session:session_id!user_to_session_session_id_fkey(*)")
+      .eq('user_id', userId);
+  }
+
   async createSession(session: Session) {
     try {
       return await this.client
@@ -36,7 +43,7 @@ class SessionController {
     }
   }
 
-  async updateSession(id: string, session: Session) {
+  async updateSession(id: number, session: Session) {
     try {
       return await this.client
         .from("session")

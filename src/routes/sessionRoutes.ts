@@ -57,4 +57,11 @@ router.put("/session/:id", async (req: Request, res: Response) => {
   res.json(result);
 });
 
+router.get("/sessions/:id", async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.id);
+
+  const response = await sessionController.getAllSessionsByUserId(userId);
+  res.json(response);
+});
+
 export default router; 
