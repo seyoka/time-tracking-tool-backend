@@ -9,16 +9,29 @@ class SessionController {
   }
 
   async getAllSessions() {
-    return await this.client
+    console.log('=== Getting all sessions ===');
+    console.log('About to query session table...');
+
+    const result = await this.client
       .from("session")
       .select("*");
+
+    console.log('Raw result from getAllSessions:', JSON.stringify(result, null, 2));
+
+    return result;
   }
 
   async getAllSessionsByUserId(userId: number) {
-    return await this.client
+    const result = await this.client
       .from("user_to_session")
-      .select("session:session_id!user_to_session_session_id_fkey(*)")
+      .select(`
+      *,
+      session!inner(*)
+    `)
       .eq('user_id', userId);
+
+    console.log('Raw result', JSON.stringify(result));
+    return result;
   }
 
   async createSession(session: Session) {

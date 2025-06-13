@@ -20,10 +20,15 @@ const sessionController = new SessionController(supabase);
 
 
 router.get("/sessions", async (req: Request, res: Response) => {
-  res.json(sessionController.getAllSessions());
+  const result = await sessionController.getAllSessions();
+  res.json(result);
 });
 
 router.post("/session", async (req: Request, res: Response) => {
+
+  console.log(req.body.title);
+  console.log(req.body.description);
+
   const session: Partial<Session> = {
     title: req.body.title || "",
     tag: req.body.tag || "",
@@ -31,6 +36,8 @@ router.post("/session", async (req: Request, res: Response) => {
     start_time: req.body.start_time ? new Date(req.body.start_time) : new Date(),
     end_time: req.body.end_time ? new Date(req.body.end_time) : new Date(),
   };
+
+  console.dir(session);
   const result = await sessionController.createSession(session as Session);
   res.json(result);
 },
@@ -61,7 +68,44 @@ router.get("/sessions/:id", async (req: Request, res: Response) => {
   const userId = parseInt(req.params.id);
 
   const response = await sessionController.getAllSessionsByUserId(userId);
-  res.json(response);
+  res.json(response.data);
 });
 
+router.get("/debug/connection", async (req: Request, res: Response) => {
+  try {
+    console.log('Testing Supabase connection...');
+
+    // Test 1: Basic connection
+    const { data, error } = await supabase
+      .from('user_to_session')
+      .select('count', { count: 'exact' });
+
+    console.log('Connection test result:', { data, error });
+
+    // Test 2: Raw query
+    const allRecords = await supabase
+      .from('user_to_session')
+      .select('*');
+
+    console.log('All user_to_session records:', allRecords);
+
+    // Test 3: Specific user query
+    const userRecords = await supabase
+      .from('user_to_session')
+      .select('*')
+      .eq('user_id', 5);
+
+    console.log('User 5 records:', userRecords);
+
+    res.json({
+      connectionTest: { data, error },
+      allRecords: allRecords,
+      userRecords: userRecords,
+    });
+
+  } catch (error) {
+    console.error('Debug route error:', error);
+    res.status(500).json({ error: error });
+  }
+});
 export default router; 
