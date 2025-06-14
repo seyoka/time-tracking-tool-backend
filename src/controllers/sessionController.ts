@@ -63,6 +63,21 @@ class SessionController {
         .update({ session })
         .eq('id', id);
     } catch (error) {
+      throw new Error("Update Session failed");
+    }
+  }
+
+  async getActiveSession(id: number) {
+    try {
+      return await this.client
+        .from("user_to_session")
+        .select(`
+            *,
+            session!inner(*)
+          `)
+        .eq("id", id)
+        .eq("session.active", true);
+    } catch (error) {
 
     }
   }

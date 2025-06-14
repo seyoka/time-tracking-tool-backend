@@ -82,14 +82,12 @@ router.get("/debug/connection", async (req: Request, res: Response) => {
 
     console.log('Connection test result:', { data, error });
 
-    // Test 2: Raw query
     const allRecords = await supabase
       .from('user_to_session')
       .select('*');
 
     console.log('All user_to_session records:', allRecords);
 
-    // Test 3: Specific user query
     const userRecords = await supabase
       .from('user_to_session')
       .select('*')
@@ -108,4 +106,14 @@ router.get("/debug/connection", async (req: Request, res: Response) => {
     res.status(500).json({ error: error });
   }
 });
-export default router; 
+
+router.get("/active-session/:id", async (req: Request, res: Response) => {
+  try {
+    const user_id = parseInt(req.params.id);
+    const response = await sessionController.getActiveSession(user_id);
+    res.json(response?.data);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+export default router;  
