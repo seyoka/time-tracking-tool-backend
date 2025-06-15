@@ -6,7 +6,8 @@ type Session = {
   end_time: Date,
   title: string,
   description: string,
-  tag: string
+  tag: string,
+  active: boolean
 };
 
 export default Session; 

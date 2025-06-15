@@ -75,7 +75,6 @@ router.get("/debug/connection", async (req: Request, res: Response) => {
   try {
     console.log('Testing Supabase connection...');
 
-    // Test 1: Basic connection
     const { data, error } = await supabase
       .from('user_to_session')
       .select('count', { count: 'exact' });
@@ -93,7 +92,6 @@ router.get("/debug/connection", async (req: Request, res: Response) => {
       .select('*')
       .eq('user_id', 5);
 
-    console.log('User 5 records:', userRecords);
 
     res.json({
       connectionTest: { data, error },

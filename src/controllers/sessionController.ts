@@ -28,7 +28,8 @@ class SessionController {
       *,
       session!inner(*)
     `)
-      .eq('user_id', userId);
+      .eq('user_id', userId)
+      .eq('session.active', false);
 
     console.log('Raw result', JSON.stringify(result));
     return result;
